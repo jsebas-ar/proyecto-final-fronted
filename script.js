@@ -31,8 +31,9 @@ const tareas = [
 
 const crearTarea = async (tarea) => {
     // enviar consulta a la API para crear una tarea
-    alert('tarea creada')
+    // alert('tarea creada')
 
+    tarea.estado = 'inactiva'
     tareas.push(tarea)
 }
 
@@ -54,7 +55,7 @@ const verTarea = async (id) => {
     }
 }
 
-const editarTarea = async (id) => {
+const editarTarea = async (id, tareaEditada) => {
     // enviar consulta a la API para obtener la tarea con el id
     alert('tarea editada')
 }
@@ -130,6 +131,38 @@ const renderTareas = async () => {
 
             // desabilitar el boton
             buttonVerMas.disabled = true
+        })
+
+        // ------- agregar evento click al boton editar
+        buttonEditar.addEventListener('click', async () => {
+            // console.log(tarea._id)
+
+            const wrapperEditarTarea = document.getElementById('wrapper-form-editar')
+            wrapperEditarTarea.style.display = 'grid'
+
+            const tareaObtenida = await verTarea(tarea._id)
+
+            const inputEditarTitulo = document.getElementById('editar-titulo')
+            const inputEditarDescripcion = document.getElementById('editar-descripcion')
+            const inputEditarResponsable = document.getElementById('editar-responsable')
+            const inputEditarEstado = document.getElementById('editar-estado')
+
+            inputEditarTitulo.value = tareaObtenida.titulo
+            inputEditarDescripcion.value = tareaObtenida.descripcion
+            inputEditarResponsable.value = tareaObtenida.responsable
+            inputEditarEstado.value = tareaObtenida.estado
+
+            const formEditarTarea = document.getElementById('form-editar-tarea')
+            formEditarTarea.addEventListener('submit', async (event) => {
+                event.preventDefault()
+
+                const data = Object.fromEntries(new FormData(event.target))
+
+                await editarTarea(tarea._id, data)
+
+                renderTareas()
+
+            })
 
         })
 
@@ -170,6 +203,10 @@ formCrearTarea.addEventListener('submit', async (event) => {
 
     await crearTarea(data)
 
+    // ocultar formulario de crear tarea
+    wrapperFormCrear.style.display = 'none'
+
+    // es necesario volver a renderizar las tareas
     renderTareas()
     
 })
