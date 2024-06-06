@@ -118,7 +118,7 @@ const renderTareas = async () => {
         buttonVerMas.addEventListener('click', async () => {
             // console.log(tarea._id)
             const tareaObtenida = await verTarea(tarea._id)
-            console.log(tareaObtenida)
+            // console.log(tareaObtenida)
 
         })
 
